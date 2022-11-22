@@ -43,7 +43,7 @@
 				<tbody><tr>
 					<th>Datum</th>
 					<th>Teamnaam</th>
-					<th class="desktop">Bedrijfsnaam</th>
+					<th class="desktop">Bedrijfsnaam hi</th>
 					<th class="desktop">Vaardigheden</th>
 					<th>Status</th>
 					<th></th>
@@ -60,6 +60,7 @@
 				 </tr></tbody>
             </table>
             <p><a href="index.php?&amp;page=1.&amp;check=1">Start.</a>  Pagina 1 van 1    <a href="index.php?&amp;page=1&amp;check=1">Einde</a></p><br></div></form>			
-			</div></div>
+			</div>
+		</div>
 </body>
 </html>
