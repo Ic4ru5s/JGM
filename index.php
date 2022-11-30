@@ -23,7 +23,7 @@
 		<div class="inner">
 			<h1>Rapporten</h1>
 			<button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='new_report.php'">+ Rapport</button>
-			<button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='sql_mess.php'">sql_mess</button>
+            <button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='questionaire.php'">Questionaire</button>
         </div>
     </div>
 </body>

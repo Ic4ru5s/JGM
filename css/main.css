@@ -1,2 +1,19 @@
+.selector {
+    background-color: rgb(202, 126, 202);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    margin: 10px;
+  }
 
+.selector:hover {
+    background-color: rgb(165, 102, 165);
+}
 
+.selected {
+    background-color: blueviolet;
+    border: none;
+    border-radius: 10px;
+    margin: 10px;
+    color: white;
+}
