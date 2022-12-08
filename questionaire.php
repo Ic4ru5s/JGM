@@ -1,3 +1,21 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "jgm-se";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,30 +27,20 @@
 <body>
     <form action="questionaire.php" method="post"> <!-- might change the action location -->
         <?php
-            ini_set('display_errors', 1);
-            ini_set('display_startup_errors', 1);
-            error_reporting(E_ALL);
-            
-            $servername = "localhost";
-            $username = "root";
-            $password = "root";
-            $dbname = "jgm-se";
-            
-            // Create connection
-            $conn = new mysqli($servername, $username, $password, $dbname);
-            // Check connection
-            if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-            }
+            include "./idk/php.php"; 
+            $teamid = URLParameterExtraction();
 
-            $sql = "SELECT questions FROM questionaires WHERE id = 22"; //change the id to be dynamic
+            $sql = "SELECT vragenId FROM companies WHERE id = '$teamid'";
+            $vragenIds = $conn->query($sql);
+            $row = mysqli_fetch_array($vragenIds);
+
+            $sql = "SELECT questions FROM questionaires WHERE id = '$row[vragenId]'";
             $result = $conn->query($sql);
-            $row = mysqli_fetch_array($result);
-            $rowtrim = rtrim($row[0], "|");
+            $row1 = mysqli_fetch_array($result);
+            $rowtrim = rtrim($row1[0], "|");
 
             $questions = explode("|", $rowtrim);
             $counter = 0;
-
 
             while($counter < count($questions)) {
                 $questionid = intval($questions[$counter]);

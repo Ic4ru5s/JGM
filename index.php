@@ -1,3 +1,21 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "jgm-se";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +43,22 @@
 			<button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='new_report.php'">+ Rapport</button>
             <button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='questionaire.php'">Questionaire</button>
         </div>
+
+        <?php
+			$sql = "SELECT * FROM companies"; //You don't need a ; like you do in SQL
+			$result = $conn->query($sql);
+				
+			echo "<table><tr><td>Datum</td><td>Teamnaam</td><td>Bedrijfsnaam</td><td>Vaardigheden</td><td>Status</td><td></td></tr>"; // start a table tag in the HTML
+				
+			while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
+			echo "<tr><td>". $row['datum'] . "</td><td>" . $row['teamnaam'] . "</td><td>" . $row['bedrijfsnaam'] . "</td><td>Vaardigheden</td><td>Status</td><td>"; 
+            echo "<button onclick=" . '"'. "window.location.href=" . "'QRcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
+            echo "</td></tr>";
+			}
+				
+			echo "</table>"; //Close the table in HTML
+			?>
+
     </div>
 </body>
 </html>

@@ -48,6 +48,7 @@ if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "
 <body>
     <div>  <!-- Question display panel -->
         <form action="setup_questionaire.php" method="post"> 
+            <input type="text" name="questionaireTitle"><br>
             <?php
                 $sql = "SELECT id, question, tag, options FROM questions";
                 $result = $conn->query($sql);
@@ -66,7 +67,7 @@ if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "
             <input type="hidden" id="idlist" name="idlist">
             <input type="submit">
             <?php
-                $sql = "INSERT INTO questionaires (questions) VALUES ('$_POST[idlist]')";
+                $sql = "INSERT INTO questionaires (title, questions) VALUES ('$_POST[questionaireTitle]', '$_POST[idlist]')";
 
                 if ($conn->query($sql) !== TRUE) {
                     echo "Error creating question: " . $conn->error;
