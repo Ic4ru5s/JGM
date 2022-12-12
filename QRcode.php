@@ -11,6 +11,7 @@
     <main>
         <img id="qrious">
     </main>
+    <button id=questionaire>Ga naar de vragenlijst</button>
 
     <script type="text/javascript">
         function getCurrentURL () {
@@ -21,7 +22,7 @@
         const idIndex = currentUrl.indexOf("=") + 1
         teamid = currentUrl.slice(idIndex)
 
-        const urlbase = 'http://localhost/JGM/QRcode.php?team='; // change this when uploading or make dynamic
+        const urlbase = 'http://localhost/JGM/questionaire.php?team='; // change this when uploading or make dynamic
         let questionaireURL = urlbase.concat(teamid);
 
 
@@ -30,7 +31,10 @@
         size: 250,
         value: questionaireURL
         });
-    </script>
 
+        document.getElementById("questionaire").onclick = function(questionareURL) {
+            location.href = questionaireURL;
+        };
+    </script>
 </body>
 </html>

@@ -14,6 +14,15 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
 die("Connection failed: " . $conn->connect_error);
 }
+
+$datum = date("Y-m-d");
+if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
+	$sql = "INSERT INTO companies (teamnaam, bedrijfsnaam, escaperoom, industrie, datum, vragenId) VALUES ('$_POST[team_name]', '$_POST[company_name]', '$_POST[escaperoom_id]', '$_POST[industry_id]', '$datum', '$_POST[questionaire]')"; //TODO: this should not fire when cells are empty
+	if (!$conn->query($sql)) {
+		echo "Not able to add record";
+		print_r($sql->errorInfo());
+	}
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,12 +49,11 @@ die("Connection failed: " . $conn->connect_error);
     <div>
 		<div class="inner">
 			<h1>Rapporten</h1>
-			<button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='new_report.php'">+ Rapport</button>
-            <button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='questionaire.php'">Questionaire</button>
+			<button onclick="window.location.href='new_report.php'">+ Rapport</button>
         </div>
 
         <?php
-			$sql = "SELECT * FROM companies"; //You don't need a ; like you do in SQL
+			$sql = "SELECT * FROM companies"; 
 			$result = $conn->query($sql);
 				
 			echo "<table><tr><td>Datum</td><td>Teamnaam</td><td>Bedrijfsnaam</td><td>Vaardigheden</td><td>Status</td><td></td></tr>"; // start a table tag in the HTML

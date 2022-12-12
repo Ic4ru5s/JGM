@@ -14,6 +14,13 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
 die("Connection failed: " . $conn->connect_error);
 }
+
+if (!empty($_POST['questionaireTitle']) && !empty($_POST['idlist'])) {
+	$sql = "INSERT INTO questionaires (title, questions) VALUES ('$_POST[questionaireTitle]', '$_POST[idlist]')";
+	if ($conn->query($sql) !== TRUE) {
+		echo "Error creating questionaire: " . $conn->error;
+	}
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +34,7 @@ die("Connection failed: " . $conn->connect_error);
 <body>
 <div class="inner">
 	<h1>Nieuw rapport aanmaken</h1>
-		<form action="" method="POST">
+		<form action="index.php" method="POST">
 			<table>
 			<tbody><tr>
 					<td>Teamnaam*:</td><td><input type="text" value="" name="team_name" required=""></td>
@@ -42,7 +49,7 @@ die("Connection failed: " . $conn->connect_error);
             </table>
 
             <?php
-				$sql = "SELECT * FROM questionaires"; //You don't need a ; like you do in SQL
+				$sql = "SELECT * FROM questionaires"; 
 				$result = $conn->query($sql);
 				
 				echo "<table>"; // start a table tag in the HTML
@@ -50,22 +57,8 @@ die("Connection failed: " . $conn->connect_error);
 				while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
 				echo "<tr><td><input type='radio' name='questionaire' value='". $row['id'] . "'></td><td>" . htmlspecialchars($row['title']) . "</td><td>" . htmlspecialchars($row['questions']) . "</td></tr>";  //$row['index'] the index here is a field name
 				}
-
 				echo "<tr><td></td><td></td><td><button onclick=" . '"window.location.href=' ."'setup_questionaire.php'" . '">Create new questionaire</button></td></tr>';
-				
 				echo "</table>"; //Close the table in HTML
-				
-
-				
-
-				$datum = date("Y-m-d");
-				$sql = "INSERT INTO companies (teamnaam, bedrijfsnaam, escaperoom, industrie, datum, vragenId) VALUES ('$_POST[team_name]', '$_POST[company_name]', '$_POST[escaperoom_id]', '$_POST[industry_id]', '$datum', '$_POST[questionaire]')"; //add question id to this
-				if ($conn->query($sql)) {
-
-				} else {
-					echo "Not able to add record";
-					print_r($sql->errorInfo());
-				}
 			?>
 			<input type="submit">
         </form>

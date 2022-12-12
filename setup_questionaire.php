@@ -18,16 +18,17 @@ die("Connection failed: " . $conn->connect_error);
 $currentoption = 0;
 $optionlist = "";       
 
-while ($currentoption <= $_POST["optioncount"]) {
+if (!empty($_POST["answertype"])) {
+    while ($currentoption <= $_POST["optioncount"]) {
     $name = "option" . $currentoption;
-
-    if ($_POST[$name] != "") {
-        $optionlist = $optionlist . $_POST[$name] . "|";
-    }       
+        if ($_POST[$name] != "") {
+            $optionlist = $optionlist . $_POST[$name] . "|";
+        }       
     $currentoption++;
-} 
+    } 
+}
 
-if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "") { // prevents empty rows in table
+if (!empty($_POST["question"]) && !empty($_POST["tag"]) && !empty($_POST["answertype"])) { // prevents empty rows in table
     $sql = "INSERT INTO questions (question, tag, answertype, options) VALUES ('$_POST[question]', '$_POST[tag]', '$_POST[answertype]', '$optionlist')";
 
     if ($conn->query($sql) !== TRUE) {
@@ -47,7 +48,7 @@ if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "
 </head>
 <body>
     <div>  <!-- Question display panel -->
-        <form action="setup_questionaire.php" method="post"> 
+        <form action="new_report.php" method="post"> 
             <input type="text" name="questionaireTitle"><br>
             <?php
                 $sql = "SELECT id, question, tag, options FROM questions";
@@ -61,19 +62,9 @@ if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "
                 } else {
                     echo "0 results";
                 }
-                
-                
             ?>
             <input type="hidden" id="idlist" name="idlist">
             <input type="submit">
-            <?php
-                $sql = "INSERT INTO questionaires (title, questions) VALUES ('$_POST[questionaireTitle]', '$_POST[idlist]')";
-
-                if ($conn->query($sql) !== TRUE) {
-                    echo "Error creating question: " . $conn->error;
-                }
-                $conn->close();
-            ?>
         </form>
     </div>
 
@@ -137,7 +128,20 @@ if ($_POST["question"] != "" || $_POST["tag"] != "" || $_POST["answertype"] != "
             }
         </script>
 
-        <br><button class="btn line_button_black float_right " style="margin-top:15px;" onclick="window.location.href='index.php'">Home</button>
+        <?php //first check for empty cells to prevent errors
+            if (!empty($_POST['tag'])) {
+                $sql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='jgm-se' AND TABLE_NAME='answers' AND column_name='$_POST[tag]'"; // checks if tag exists
+                $tagcount = $conn->query($sql);
+                $tagcountarray = mysqli_fetch_array($tagcount);
+                if ($tagcountarray[0] == 0) {
+                    $sql = "ALTER TABLE answers ADD " . $_POST["tag"] . " VARCHAR(255)"; // writes a new column if the tag is not used before
+                    $conn->query($sql);
+                } else {
+                    echo "This tag already exists, pick a new one";
+                }
+            }
+        ?>
+        <br><button onclick="window.location.href='index.php'">Home</button>
     </div>
 
     <script> // prevents resubmission when refreshing, might change for post-refresh-get if ample reason to

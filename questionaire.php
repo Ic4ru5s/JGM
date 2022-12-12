@@ -25,10 +25,11 @@ die("Connection failed: " . $conn->connect_error);
     <title>Questionaire</title>
 </head>
 <body>
-    <form action="questionaire.php" method="post"> <!-- might change the action location -->
         <?php
             include "./idk/php.php"; 
             $teamid = URLParameterExtraction();
+
+            echo "<form action = 'questionaireHandling.php?team=" . $teamid . "' method='post'>";
 
             $sql = "SELECT vragenId FROM companies WHERE id = '$teamid'";
             $vragenIds = $conn->query($sql);
@@ -56,15 +57,16 @@ die("Connection failed: " . $conn->connect_error);
                     $optarray = explode("|", $opttrim);
                     // insert for loop
                     foreach ($optarray as $option) {
-                        echo '<input type="' . $questarray["answertype"] . '" id="' . $option . '" name="' . $questarray["tag"] . '" value="' . $option . '"><label for="' . $option . '">' . $option . '</label><br>';
+                        if ($questarray["answertype"] === "radio") {
+                            echo '<input type="' . $questarray["answertype"] . '" id="' . $option . '" name="' . $questarray["tag"] . '" value="' . $option . '"><label for="' . $option . '">' . $option . '</label><br>';
+                        } else {
+                            echo '<input type="' . $questarray["answertype"] . '" id="' . $option . '" name="' . $questarray["tag"] . '[]" value="' . $option . '"><label for="' . $option . '">' . $option . '</label><br>';
+                        }
                     }
-                    
                 } else {
-                    echo '<input type="' . $questarray["answertype"] . '" name="' . $questarray["answertype"] . '">';
+                    echo '<input type="' . $questarray["answertype"] . '" name="' . $questarray["tag"] . '">';
                 }
-
                 echo "</div>";
-
                 $counter++;
             }
         ?>
