@@ -38,35 +38,33 @@ if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
     <script src="js/main.js"></script>
 </head>
 <body>
-    <div id="main">
-        <div class="headerblock">
-		    <a href="index.php">Sessies</a> |  
-            <a href="overviews.php">Overzichten</a> | 
-            <a href="company.php">Mijn gegevens</a> | 
-            <a href="sources.php">Hoe werkt het?</a>
-        </div>
-    </div>
+    <?php 
+    include "header.html";
+    include "headerblock.html";
+    ?>
     <div>
 		<div class="inner">
 			<h1>Rapporten</h1>
-			<button onclick="window.location.href='new_report.php'">+ Rapport</button>
+            <p>Deze pagina is over het algemeen onveranderd, er missen alleen een aantal functionaliteiten die niet direct relevant waren voor dit project. De "+ Rapport" knop maakt nog steeds een nieuwe rapportage voor een nieuw team aan. De "Questionaire code" knop stuurt je naar een pagina met een QR code die de deelnemers naar de enquete stuurt.</p>
+			<button class="btn line_button_black float_right" onclick="window.location.href='new_report.php'">+ Rapport</button>
         </div>
 
         <?php
 			$sql = "SELECT * FROM companies"; 
 			$result = $conn->query($sql);
 				
-			echo "<table><tr><td>Datum</td><td>Teamnaam</td><td>Bedrijfsnaam</td><td>Vaardigheden</td><td>Status</td><td></td></tr>"; // start a table tag in the HTML
+			echo "<table class='stylish'><tr><th>Datum</th><th>Teamnaam</th><th>Bedrijfsnaam</th><th>Vaardigheden</th><th>Status</th><th></th></tr>"; // start a table tag in the HTML
 				
 			while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
 			echo "<tr><td>". $row['datum'] . "</td><td>" . $row['teamnaam'] . "</td><td>" . $row['bedrijfsnaam'] . "</td><td>Vaardigheden</td><td>Status</td><td>"; 
-            echo "<button onclick=" . '"'. "window.location.href=" . "'QRcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
+            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'QRcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
             echo "</td></tr>";
 			}
 				
 			echo "</table>"; //Close the table in HTML
-			?>
-
+            $conn -> close();
+		?>
     </div>
+    <?php include "footer.html";?>
 </body>
 </html>

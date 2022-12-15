@@ -25,8 +25,19 @@ include "./idk/php.php";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questionaire completed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <?php
+        include "header.html";
+    ?>
+
+    <div class="headerblock"></div>
+    <h1>De afsluitpagina</h1>
+    <p>Op deze pagina wordt de vragenlijst verwerkt en de deelnemers bedankt. Deze pagina is niet relevant voor de deelnemers maar zorgt voor een betere dataflow van vragenlijst naar database.</p>
+
+
     <?php
         //find the questions answered
         $teamid = URLParameterExtraction();
@@ -41,12 +52,11 @@ include "./idk/php.php";
         $questions = explode("|", $rowtrim);
 
         //loop through questions
-        $counter = 0;
         $tags = "";
         $values = "";
-        while($counter < count($questions)) {
+        foreach($questions as $question) {
             //find the question and its info
-            $questionid = intval($questions[$counter]);
+            $questionid = intval($question);
             $sql = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
             $questinfo = $conn->query($sql);
             $questarray = mysqli_fetch_array($questinfo);
@@ -54,9 +64,9 @@ include "./idk/php.php";
             $tags = $tags . $tag . ", ";
 
             //determine how to read the question
-            if ($questarray["answertype"] === "radio" || $questarray["answertype"] === "text") {
+            if ($questarray["answertype"] === "radio" || $questarray["answertype"] === "text" || $questarray["answertype"] === "date") {
                 $values =  $values . "'" . $_POST[$tag] . "', ";
-            } else if ($questarray["answertype"] === "date" || $questarray["answertype"] === "number") {
+            } else if ($questarray["answertype"] === "number") {
                 $values =  $values . $_POST[$tag] . ", ";
             } else {
                 $value = "";
@@ -66,7 +76,6 @@ include "./idk/php.php";
                 $value = rtrim($value, "|");
                 $values = $values . "'" . $value . "', ";
             }
-            $counter++;
         }
         $values = rtrim($values, ", ");
         $tags = rtrim($tags, ", ");
@@ -78,6 +87,13 @@ include "./idk/php.php";
         } else {
             echo "Bedankt voor het invullen van deze vragenlijst.";
         }
+        $conn -> close();
+        include "footer.html";
     ?>
+    <script> // prevents resubmission when refreshing, might change for post-refresh-get if ample reason to
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 </body>
 </html>

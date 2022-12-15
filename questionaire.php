@@ -23,8 +23,18 @@ die("Connection failed: " . $conn->connect_error);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questionaire</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&amp;display=swap" rel="stylesheet">
 </head>
 <body>
+    <?php
+        include "header.html";
+    ?>
+
+    <div class="headerblock"></div>
+    <h1>De vragenlijst</h1>
+    <p>Op deze pagina wordt de vragenlijst ingevuld die geselecteerd is voor het betreffende team. Na het inleveren worden alle resultaten centraal opgeslagen in de tabel die zichtbaar is op de overzicht pagina.</p>
+        
         <?php
             include "./idk/php.php"; 
             $teamid = URLParameterExtraction();
@@ -39,12 +49,10 @@ die("Connection failed: " . $conn->connect_error);
             $result = $conn->query($sql);
             $row1 = mysqli_fetch_array($result);
             $rowtrim = rtrim($row1[0], "|");
-
             $questions = explode("|", $rowtrim);
-            $counter = 0;
 
-            while($counter < count($questions)) {
-                $questionid = intval($questions[$counter]);
+            foreach($questions as $question) {
+                $questionid = intval($question);
                 $sql = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
                 $questinfo = $conn->query($sql);
                 $questarray = mysqli_fetch_array($questinfo);
@@ -67,8 +75,8 @@ die("Connection failed: " . $conn->connect_error);
                     echo '<input type="' . $questarray["answertype"] . '" name="' . $questarray["tag"] . '">';
                 }
                 echo "</div>";
-                $counter++;
             }
+            $conn -> close();
         ?>
     <input type="submit">
     </form>

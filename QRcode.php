@@ -6,8 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QRcode</title>
     <script src="./node_modules/qrious/dist/qrious.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&amp;display=swap" rel="stylesheet">
 </head>
 <body>
+    <?php 
+    include "header.html"
+    ?>
+    <div class="headerblock"></div>
+    <h1>QR code vragenlijst</h1>
+    <p>Op deze pagina staat de QR code die dynamisch gelinkt is aan de vragenlijst voor het geselecteerde team. Door het getal in de URL aan te passen kan de locatie van de QR code ook aangepast worden.</p>
     <main>
         <img id="qrious">
     </main>
@@ -36,5 +44,6 @@
             location.href = questionaireURL;
         };
     </script>
+    <?php include "footer.html";?>
 </body>
 </html>
