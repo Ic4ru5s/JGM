@@ -1,21 +1,3 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "jgm-se";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +12,8 @@ die("Connection failed: " . $conn->connect_error);
     <?php 
     include "header.html";
     include "headerblock.html";
+    include "./idk/php.php"; 
+    $conn = login();
     ?>
     <div>
         <h1>Antwoorden vragenlijst</h1>

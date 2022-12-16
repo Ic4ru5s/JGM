@@ -1,19 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "jgm-se";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
+include "./idk/php.php"; 
+$conn = login();
 
 $currentoption = 0;
 $optionlist = "";       
@@ -28,7 +15,7 @@ if (!empty($_POST["answertype"])) {
     } 
 }
 
-if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype"] == "radio" || $_POST["answertype"] == "checkbox") && !empty($optionlist)) || ($_POST["answertype"] != "radio" && $_POST["answertype"] != "checkbox"))) { // prevents empty rows in table
+if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype"] == "radio" || $_POST["answertype"] == "checkbox") && !empty($optionlist)) || ($_POST["answertype"] != "radio" && $_POST["answertype"] != "checkbox"))) { // I am sorry for this monstrosity but it prevents empty rows in table
     $sql = "INSERT INTO questions (question, tag, answertype, options) VALUES ('$_POST[question]', '$_POST[tag]', '$_POST[answertype]', '$optionlist')";
 
     if ($conn->query($sql) !== TRUE) {

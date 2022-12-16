@@ -1,21 +1,3 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "jgm-se";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +10,13 @@ die("Connection failed: " . $conn->connect_error);
 </head>
 <body>
     <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
         include "header.html";
+        include "./idk/php.php"; 
+        $conn = login();
     ?>
 
     <div class="headerblock"></div>
@@ -36,7 +24,6 @@ die("Connection failed: " . $conn->connect_error);
     <p>Op deze pagina wordt de vragenlijst ingevuld die geselecteerd is voor het betreffende team. Na het inleveren worden alle resultaten centraal opgeslagen in de tabel die zichtbaar is op de overzicht pagina.</p>
         
         <?php
-            include "./idk/php.php"; 
             $teamid = URLParameterExtraction();
 
             echo "<form action = 'questionaireHandling.php?team=" . $teamid . "' method='post'>";

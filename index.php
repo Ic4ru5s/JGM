@@ -1,19 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "jgm-se";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
+include "./idk/php.php"; 
+$conn = login();
 
 $datum = date("Y-m-d");
 if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
@@ -57,7 +44,8 @@ if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
 				
 			while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
 			echo "<tr><td>". $row['datum'] . "</td><td>" . $row['teamnaam'] . "</td><td>" . $row['bedrijfsnaam'] . "</td><td>Vaardigheden</td><td>Status</td><td>"; 
-            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'QRcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
+            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'qrcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
+            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'teampage.php?team=". $row["id"] ."'" . '"' . ">Gegevens</button>";
             echo "</td></tr>";
 			}
 				
