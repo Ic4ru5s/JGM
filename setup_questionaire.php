@@ -1,23 +1,22 @@
 <?php
-include "./idk/php.php"; 
+include "php.php"; 
 $conn = login();
 
 $currentoption = 0;
 $optionlist = "";       
 
-if (!empty($_POST["answertype"])) {
-    while ($currentoption <= $_POST["optioncount"]) {
-    $name = "option" . $currentoption;
-        if ($_POST[$name] != "") {
-            $optionlist = $optionlist . $_POST[$name] . "|";
-        }       
-    $currentoption++;
-    } 
+while ($currentoption <= $_POST["optioncount"]) { //creates the list of options stored in the table
+$name = "option" . $currentoption;
+    if (!empty($_POST[$name])) {
+        $optionlist = $optionlist . $_POST[$name] . "|";
+    }       
+$currentoption++;
 }
+$optionlistTrimmed = rtrim($optionlist, "|"); 
 
-if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype"] == "radio" || $_POST["answertype"] == "checkbox") && !empty($optionlist)) || ($_POST["answertype"] != "radio" && $_POST["answertype"] != "checkbox"))) { // I am sorry for this monstrosity but it prevents empty rows in table
-    $sql = "INSERT INTO questions (question, tag, answertype, options) VALUES ('$_POST[question]', '$_POST[tag]', '$_POST[answertype]', '$optionlist')";
 
+if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype"] == "radio" || $_POST["answertype"] == "checkbox") && !empty($optionlistTrimmed)) || ($_POST["answertype"] != "radio" && $_POST["answertype"] != "checkbox"))) { // The if statement is a monstrosity but it stores the new questions and prevents empty rows.
+    $sql = "INSERT INTO questions (question, tag, answertype, options) VALUES ('$_POST[question]', '$_POST[tag]', '$_POST[answertype]', '$optionlistTrimmed')";
     if ($conn->query($sql) !== TRUE) {
         echo "Error creating question: " . $conn->error;
         }
@@ -60,16 +59,13 @@ if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype
                         if (!empty($row['options'])) {// run a loop to put options in a list
                             echo '<ul class="optionlist">';
                         
-                            $opttrim = rtrim($row['options'], "|");
-                            $options = explode("|", $opttrim);
+                            $options = explode("|", $row['options']);
                             foreach ($options as $option) {
                                 echo '<li class="option">' . $option . '</li>';
                             }
                             echo '</ul>';
                         }
-
                         echo '<p class="functions">Add functionalities here</p></div>';
-
                     }
                 } else {
                     echo "0 results";
@@ -143,8 +139,7 @@ if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype
         <?php //first check for empty cells to prevent errors
             if (!empty($_POST['tag'])) {
                 $sql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='jgm-se' AND TABLE_NAME='answers' AND column_name='$_POST[tag]'"; // checks if tag exists
-                $tagcount = $conn->query($sql);
-                $tagcountarray = mysqli_fetch_array($tagcount);
+                $tagcountarray = sqlToArray($sql, $conn);
 
                 //find correct datatype
                 if ($_POST['answertype'] == "text" || $_POST['answertype'] == "radio" || $_POST['answertype'] == "checkbox") {
@@ -165,12 +160,6 @@ if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype
             $conn -> close();
         ?>
     </div>
-
-    <script> // prevents resubmission when refreshing, might change for post-refresh-get if ample reason to
-    if ( window.history.replaceState ) {
-        window.history.replaceState( null, null, window.location.href );
-    }
-    </script>
 
     <?php include "footer.html";?>
 </body>

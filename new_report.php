@@ -1,9 +1,10 @@
 <?php
-include "./idk/php.php"; 
+include "php.php"; 
 $conn = login();
 
-if (!empty($_POST['questionaireTitle']) && !empty($_POST['idlist'])) {
-	$sql = "INSERT INTO questionaires (title, questions) VALUES ('$_POST[questionaireTitle]', '$_POST[idlist]')";
+if (!empty($_POST['questionaireTitle']) && !empty($_POST['idlist'])) { // stores the new questionaire in the questionaires table
+	$questionlist = rtrim($_POST['idlist'], "|");
+	$sql = "INSERT INTO questionaires (title, questions) VALUES ('$_POST[questionaireTitle]', $questionlist)";
 	if ($conn->query($sql) !== TRUE) {
 		echo "Error creating questionaire: " . $conn->error;
 	}
@@ -21,7 +22,7 @@ if (!empty($_POST['questionaireTitle']) && !empty($_POST['idlist'])) {
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&amp;display=swap" rel="stylesheet">
 </head>
 <body>
-<?php 
+	<?php 
     include "header.html";
     include "headerblock.html";
     ?>
@@ -63,13 +64,15 @@ if (!empty($_POST['questionaireTitle']) && !empty($_POST['idlist'])) {
 				$sql = "SELECT * FROM questionaires"; 
 				$result = $conn->query($sql);
 				
-				echo "<table class='stylish'><tr><th></th><th>Questionaire</th><th>Vragen</th></tr>"; // start a table tag in the HTML
+				echo "<table class='stylish'><tr><th></th><th>Questionaire</th><th>Vragen</th></tr>"; // starts the questionaire selection table
 				
-				while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
-				echo "<tr><td><input type='radio' name='questionaire' value='". $row['id'] . "'></td><td>" . htmlspecialchars($row['title']) . "</td><td>" . htmlspecialchars($row['questions']) . "</td></tr>";  //$row['index'] the index here is a field name
+				while($row = $result->fetch_assoc()){   // Creates a row in the table for all questionaires
+				echo "<tr><td><input type='radio' name='questionaire' value='". $row['id'] . "'></td><td>" . htmlspecialchars($row['title']) . "</td><td>" . htmlspecialchars($row['questions']) . "</td></tr>";
 				}
+
 				echo "<tr><td></td><td></td><td><button type='button' onclick=" . '"window.location.href=' ."'setup_questionaire.php'" . '">Create new questionaire</button></td></tr>';
-				echo "</table>"; //Close the table in HTML
+				echo "</table>"; 
+
 				$conn -> close();
 			?>
 			<input type="submit">

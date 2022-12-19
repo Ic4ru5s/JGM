@@ -10,12 +10,8 @@
 </head>
 <body>
     <?php
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
         include "header.html";
-        include "./idk/php.php"; 
+        include "php.php"; 
         $conn = login();
     ?>
 
@@ -26,30 +22,25 @@
         <?php
             $teamid = URLParameterExtraction();
 
-            echo "<form action = 'questionaireHandling.php?team=" . $teamid . "' method='post'>";
+            echo "<form action = 'questionaireHandling.php?team=" . $teamid . "' method='post'>"; //start the form
 
-            $sql = "SELECT vragenId FROM companies WHERE id = '$teamid'";
-            $vragenIds = $conn->query($sql);
-            $row = mysqli_fetch_array($vragenIds);
+            $sql1 = "SELECT vragenId FROM companies WHERE id = '$teamid'";
+            $questionaireID = sqlToArray($sql1, $conn);
 
-            $sql = "SELECT questions FROM questionaires WHERE id = '$row[vragenId]'";
-            $result = $conn->query($sql);
-            $row1 = mysqli_fetch_array($result);
-            $rowtrim = rtrim($row1[0], "|");
-            $questions = explode("|", $rowtrim);
+            $sql2 = "SELECT questions FROM questionaires WHERE id = '$questionaireID[vragenId]'";
+            $questionlist = sqlToArray($sql2, $conn);
+            $questions = explode("|", $questionlist['questions']);
 
-            foreach($questions as $question) {
+            foreach($questions as $question) { // cycle through questions to render them
                 $questionid = intval($question);
-                $sql = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
-                $questinfo = $conn->query($sql);
-                $questarray = mysqli_fetch_array($questinfo);
+                $sql3 = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
+                $questarray = sqlToArray($sql3, $conn);
 
                 echo "<div><h1>" . $questarray["question"] . "</h1><br>";
                 
                 if ($questarray["answertype"] === "radio" || $questarray["answertype"] === "checkbox") {
                     $optstring = $questarray["options"];
-                    $opttrim = rtrim($optstring, "|");
-                    $optarray = explode("|", $opttrim);
+                    $optarray = explode("|", $optstring);
                     // insert for loop
                     foreach ($optarray as $option) {
                         if ($questarray["answertype"] === "radio") {

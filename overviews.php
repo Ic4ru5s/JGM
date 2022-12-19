@@ -12,7 +12,7 @@
     <?php 
     include "header.html";
     include "headerblock.html";
-    include "./idk/php.php"; 
+    include "php.php"; 
     $conn = login();
     ?>
     <div>
@@ -45,6 +45,8 @@
             }
             echo "</tr>";
         }
+
+        $conn -> close();
     ?>
 
 </body>

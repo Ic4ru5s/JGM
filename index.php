@@ -1,10 +1,10 @@
 <?php
-include "./idk/php.php"; 
+include "php.php"; 
 $conn = login();
 
 $datum = date("Y-m-d");
-if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
-	$sql = "INSERT INTO companies (teamnaam, bedrijfsnaam, escaperoom, industrie, datum, vragenId) VALUES ('$_POST[team_name]', '$_POST[company_name]', '$_POST[escaperoom_id]', '$_POST[industry_id]', '$datum', '$_POST[questionaire]')"; //TODO: this should not fire when cells are empty
+if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) { // This segment stores the result of the new report in the companies table
+	$sql = "INSERT INTO companies (teamnaam, bedrijfsnaam, escaperoom, industrie, datum, vragenId) VALUES ('$_POST[team_name]', '$_POST[company_name]', '$_POST[escaperoom_id]', '$_POST[industry_id]', '$datum', '$_POST[questionaire]')";
 	if (!$conn->query($sql)) {
 		echo "Not able to add record";
 		print_r($sql->errorInfo());
@@ -22,7 +22,6 @@ if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&amp;display=swap" rel="stylesheet">
     <meta name="description" content="JGM serious eXperiences">
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/main.js"></script>
 </head>
 <body>
     <?php 
@@ -40,16 +39,16 @@ if (!empty($_POST['team_name']) && !empty($_POST['questionaire'])) {
 			$sql = "SELECT * FROM companies"; 
 			$result = $conn->query($sql);
 				
-			echo "<table class='stylish'><tr><th>Datum</th><th>Teamnaam</th><th>Bedrijfsnaam</th><th>Vaardigheden</th><th>Status</th><th></th></tr>"; // start a table tag in the HTML
+			echo "<table class='stylish'><tr><th>Datum</th><th>Teamnaam</th><th>Bedrijfsnaam</th><th>Vaardigheden</th><th>Status</th><th></th></tr>"; // A table to house the company information is started
 				
-			while($row = $result->fetch_assoc()){   //Creates a loop to loop through results
+			while($row = $result->fetch_assoc()){ // this loop makes a row in the table for all companies in the table
 			echo "<tr><td>". $row['datum'] . "</td><td>" . $row['teamnaam'] . "</td><td>" . $row['bedrijfsnaam'] . "</td><td>Vaardigheden</td><td>Status</td><td>"; 
-            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'qrcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>";
-            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'teampage.php?team=". $row["id"] ."'" . '"' . ">Gegevens</button>";
+            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'qrcode.php?team=". $row["id"] ."'" . '"' . ">Questionaire code</button>"; // makes the button to the questionaire
+            echo "<button class='button_link btn button_black  small_btn' onclick=" . '"'. "window.location.href=" . "'teampage.php?team=". $row["id"] ."'" . '"' . ">Gegevens</button>"; // makes a button to the team information page
             echo "</td></tr>";
 			}
 				
-			echo "</table>"; //Close the table in HTML
+			echo "</table>";
             $conn -> close();
 		?>
     </div>

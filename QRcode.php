@@ -22,17 +22,12 @@
     <button id=questionaire>Ga naar de vragenlijst</button>
 
     <script type="text/javascript">
-        function getCurrentURL () {
-            return window.location.href
-        }
-
-        const currentUrl = getCurrentURL()
+        const currentUrl = window.location.href
         const idIndex = currentUrl.indexOf("=") + 1
         teamid = currentUrl.slice(idIndex)
 
-        const urlbase = 'http://localhost/JGM/questionaire.php?team='; // change this when uploading or make dynamic
+        const urlbase = 'http://localhost/JGM/questionaire.php?team='; 
         let questionaireURL = urlbase.concat(teamid);
-
 
         let qr = window.qr = new QRious({
         element: document.getElementById('qrious'),

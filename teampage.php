@@ -1,5 +1,5 @@
 <?php
-include "./idk/php.php"; 
+include "php.php"; 
 $conn = login();
 
 $teamid = URLParameterExtraction();
@@ -32,32 +32,26 @@ $vragenId = $vragenIdArray[0];
         <p>dit vak is opzettelijk leeg gelaten.</p>
     <h2>Theoretische assesments</h2>
     <?php
-		$sql = "SELECT * FROM questionaires WHERE id=" . $vragenId; //maybe I don't need all so can replace the star
-		$result1 = $conn->query($sql);
-        $row = mysqli_fetch_array($result1);
+		$sql1 = "SELECT title FROM questionaires WHERE id=" . $vragenId; // these statements select the required data for the team analysis done below
+        $title = sqlToArray($sql1, $conn);
 
-        $sql = "SELECT COUNT(*) as count,AVG(leeftijd) as avg_age FROM answers WHERE teamid=" . $teamid;
-		$result2 = $conn->query($sql);
-        $responsecount = mysqli_fetch_array($result2);
+        $sql2 = "SELECT COUNT(*) as count,AVG(leeftijd) as avg_age FROM answers WHERE teamid=" . $teamid;
+        $responsecount = sqlToArray($sql2, $conn);
 
-        $sql = "SELECT COUNT(*) as welErvaring FROM answers WHERE ervaring='Ja' AND teamid=" . $teamid;
-		$result3 = $conn->query($sql);
-        $ervaringcount = mysqli_fetch_array($result3);
+        $sql3 = "SELECT COUNT(*) as welErvaring FROM answers WHERE ervaring='Ja' AND teamid=" . $teamid;
+        $ervaringcount = sqlToArray($sql3, $conn);
 
-        $sql = "SELECT COUNT(*) FROM answers WHERE gender='Man' AND teamid=" . $teamid;
-		$result4 = $conn->query($sql);
-        $mancount = mysqli_fetch_array($result4);
+        $sql4 = "SELECT COUNT(*) FROM answers WHERE gender='Man' AND teamid=" . $teamid;
+        $mancount = sqlToArray($sql4, $conn);
 
-        $sql = "SELECT COUNT(*) FROM answers WHERE gender='Vrouw' AND teamid=" . $teamid;
-		$result5 = $conn->query($sql);
-        $vrouwcount = mysqli_fetch_array($result5);
+        $sql5 = "SELECT COUNT(*) FROM answers WHERE gender='Vrouw' AND teamid=" . $teamid;
+        $vrouwcount = sqlToArray($sql5, $conn);
 
-        $sql = "SELECT COUNT(*) FROM answers WHERE gender='Anders' AND teamid=" . $teamid;
-		$result6 = $conn->query($sql);
-        $anderscount = mysqli_fetch_array($result6);
+        $sql6 = "SELECT COUNT(*) FROM answers WHERE gender='Anders' AND teamid=" . $teamid;
+        $anderscount = sqlToArray($sql6, $conn);
 
-		echo "<table class='stylish'><tr><th>Titel</th><th>URL formulier</th><th>Responses</th></tr>"; // start a table tag in the HTML
-        echo "<tr><td>" . $row['title'] . "</td><td><a href='questionaire.php?team=" . $teamid . "'>questionaire.php?team=" . $teamid . "</a></td><td>" . $responsecount["count"] . " responses</td></tr></table>";
+		echo "<table class='stylish'><tr><th>Titel</th><th>URL formulier</th><th>Responses</th></tr>";
+        echo "<tr><td>" . $title['title'] . "</td><td><a href='questionaire.php?team=" . $teamid . "'>questionaire.php?team=" . $teamid . "</a></td><td>" . $responsecount["count"] . " responses</td></tr></table>";
 		?>
     <h2>Team opbouw</h2>
     <table>

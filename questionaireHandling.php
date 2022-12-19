@@ -11,7 +11,7 @@
 <body>
     <?php
         include "header.html";
-        include "./idk/php.php"; 
+        include "php.php"; 
         $conn = login();
     ?>
 
@@ -23,15 +23,12 @@
     <?php
         //find the questions answered
         $teamid = URLParameterExtraction();
-        $sql = "SELECT vragenId FROM companies WHERE id = '$teamid'";
-        $vragenIds = $conn->query($sql);
-        $row = mysqli_fetch_array($vragenIds);
+        $sql1 = "SELECT vragenId FROM companies WHERE id = '$teamid'";
+        $questionaire = sqlToArray($sql1, $conn);
 
-        $sql = "SELECT questions FROM questionaires WHERE id = '$row[vragenId]'";
-        $result = $conn->query($sql);
-        $row1 = mysqli_fetch_array($result);
-        $rowtrim = rtrim($row1[0], "|");
-        $questions = explode("|", $rowtrim);
+        $sql2 = "SELECT questions FROM questionaires WHERE id = '$questionaire[vragenId]'";
+        $questionlist = sqlToArray($sql2, $conn);
+        $questions = explode("|", $questionlist);
 
         //loop through questions
         $tags = "";
@@ -39,9 +36,8 @@
         foreach($questions as $question) {
             //find the question and its info
             $questionid = intval($question);
-            $sql = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
-            $questinfo = $conn->query($sql);
-            $questarray = mysqli_fetch_array($questinfo);
+            $sql3 = "SELECT question, tag, answertype, options FROM questions WHERE id = $questionid";
+            $questarray = sqlToArray($sql3, $conn);
             $tag = $questarray['tag'];
             $tags = $tags . $tag . ", ";
 
