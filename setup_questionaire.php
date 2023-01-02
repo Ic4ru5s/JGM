@@ -44,7 +44,7 @@ if (!empty($_POST["question"]) && !empty($_POST["tag"]) && ((($_POST["answertype
 
     <div>  <!-- Question display panel -->
         <form action="new_report.php" method="post"> 
-            <label for="questionaireTitle">Titel vragenlijst: </label><input type="text" name="questionaireTitle" id="questionaireTitle"><br>
+            <label for="questionaireTitle">Titel vragenlijst: </label><input type="text" name="questionaireTitle" id="questionaireTitle" required><br>
             <?php
                 $sql = "SELECT id, question, tag, options FROM questions";
                 $result = $conn->query($sql);
